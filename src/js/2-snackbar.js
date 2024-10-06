@@ -16,15 +16,18 @@ function handleSubmit(event) {
 
   const delay = refs.delay.value;
 
-  const promise = fulfilled => fulfilled
-    ? Promise.resolve(`✅ Fulfilled promise in ${delay}ms`)
-    : Promise.reject(`❌ Rejected promise in ${delay}ms`);
+  const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      fulfilled
+        ? resolve(`✅ Fulfilled promise in ${delay}ms`)
+        : reject(`❌ Rejected promise in ${delay}ms`);
+    }, delay);
+  });
 
-  promise(fulfilled)
-    .then(message => setTimeout(() => showResolved(message), delay))
-    .catch(message => setTimeout(() => showRejected(message), delay));
+  promise
+    .then(message => showResolved(message))
+    .catch(message => showRejected(message));
 }
-
 
 function showResolved(message) {
   iziToast.success({ message, position: 'topRight' });
